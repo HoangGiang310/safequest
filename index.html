@@ -787,6 +787,7 @@ footer{background:linear-gradient(135deg,#123f68,#1a6092)!important;color:#eaf7f
   transition: all .2s;
   display: inline-block;
   font-family: inherit;
+  line-height: normal;
 }
 .btn-download-nav:hover {
   background: #1d7ab8;
@@ -796,6 +797,38 @@ footer{background:linear-gradient(135deg,#123f68,#1a6092)!important;color:#eaf7f
 .btn-download-nav:active {
   transform: translateY(2px);
   box-shadow: 0 2px 0 #1b6ea8;
+}
+
+.btn-play-nav,
+.menu a.btn-play-nav {
+  padding: 9px 16px;
+  background: #ffc63d;
+  color: #164d7a;
+  box-shadow: 0 5px 0 #e2a928;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 900;
+  border: 0;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all .2s;
+  display: inline-block;
+  font-family: inherit;
+  text-decoration: none;
+  line-height: normal;
+  text-align: center;
+}
+.btn-play-nav:hover,
+.menu a.btn-play-nav:hover {
+  background: #ffcf54;
+  color: #164d7a;
+  transform: translateY(-2px);
+  box-shadow: 0 7px 0 #e2a928;
+}
+.btn-play-nav:active,
+.menu a.btn-play-nav:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #e2a928;
 }
 
 .sq-download-modal {
@@ -1051,7 +1084,12 @@ button:disabled{cursor:not-allowed}
       Tải Xuống
     </button>
 
-    <a href="#play">🎮 Chơi</a>
+    <a
+      href="https://safequestapp.vercel.app/"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="btn-play-nav"
+    >Chơi Ngay</a>
 
     <a href="#about">📖 Tìm hiểu</a>
 
@@ -2898,11 +2936,30 @@ window.addEventListener("keydown", function(e){
   }
 });
 
+function syncNavButtonWidth(){
+  const d = document.querySelector('.btn-download-nav');
+  const p = document.querySelector('.btn-play-nav');
+  if(d && p){
+    const w = d.getBoundingClientRect().width;
+    if(w > 0){
+      p.style.width = w + 'px';
+      p.style.paddingLeft = '0';
+      p.style.paddingRight = '0';
+      p.style.textAlign = 'center';
+    }
+  }
+}
 window.addEventListener("DOMContentLoaded", function(){
+  syncNavButtonWidth();
   if(window.location.hash === "#download"){
     showDownload();
   }
 });
+window.addEventListener("load", syncNavButtonWidth);
+window.addEventListener("resize", syncNavButtonWidth);
+if(document.fonts){
+  document.fonts.ready.then(syncNavButtonWidth);
+}
 
 window.addEventListener("hashchange", function(){
   if(window.location.hash === "#download"){
