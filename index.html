@@ -772,7 +772,61 @@ footer{background:linear-gradient(135deg,#123f68,#1a6092)!important;color:#eaf7f
 }
 
 
-/* ================= DOWNLOAD MODAL & BUTTON (NO ICONS) ================= */
+/* ================= DOWNLOAD MODAL & BUTTONS ================= */
+.btn-download-hero {
+  background: #258ed5 !important;
+  color: #ffffff !important;
+  box-shadow: 0 5px 0 #1b6ea8, 0 10px 25px rgba(37,142,213,.22) !important;
+  border: 1px solid rgba(255,255,255,.35) !important;
+  cursor: pointer;
+  text-align: center;
+  font-size: inherit;
+  line-height: inherit;
+  white-space: nowrap;
+}
+.btn-download-hero:hover {
+  background: #1d7ab8 !important;
+  color: #ffffff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 7px 0 #1b6ea8, 0 12px 28px rgba(37,142,213,.28) !important;
+}
+.btn-download-hero:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 #1b6ea8 !important;
+}
+
+.btn-play-hero {
+  background: #ffc63d !important;
+  color: #164d7a !important;
+  box-shadow: 0 5px 0 #e2a928, 0 10px 25px rgba(217,158,32,.18) !important;
+  border: 1px solid rgba(255,255,255,.55) !important;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  font-size: inherit;
+  line-height: inherit;
+  white-space: nowrap;
+}
+.btn-play-hero:hover {
+  background: #ffcf54 !important;
+  color: #164d7a !important;
+  transform: translateY(-2px);
+  box-shadow: 0 7px 0 #e2a928, 0 12px 28px rgba(217,158,32,.25) !important;
+}
+.btn-play-hero:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 #e2a928 !important;
+}
+
+@media(min-width: 601px) {
+  .btn-learn-app,
+  .btn-download-hero,
+  .btn-play-hero {
+    min-width: 178px;
+    text-align: center;
+  }
+}
+
 .btn-download-nav {
   padding: 9px 16px;
   background: #258ed5;
@@ -1076,21 +1130,6 @@ button:disabled{cursor:not-allowed}
 
   <div class="menu">
 
-        <button
-      class="btn-download-nav"
-      onclick="showDownload()"
-      type="button"
-    >
-      Tải Xuống
-    </button>
-
-    <a
-      href="https://safequestapp.vercel.app/"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="btn-play-nav"
-    >Chơi Ngay</a>
-
     <a href="#about">📖 Tìm hiểu</a>
 
     <a href="#guide">🧭 Hướng dẫn</a>
@@ -1151,7 +1190,8 @@ button:disabled{cursor:not-allowed}
       </a>
 
       <a
-        class="btn"
+        class="btn btn-learn-app"
+        id="btnLearnApp"
         href="#about"
         style="
         background:white;
@@ -1160,6 +1200,21 @@ button:disabled{cursor:not-allowed}
       >
         📖 Tìm hiểu app
       </a>
+
+      <button
+        class="btn btn-download-hero"
+        onclick="showDownload()"
+        type="button"
+      >
+        Tải Xuống
+      </button>
+
+      <a
+        href="https://safequestapp.vercel.app/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn btn-play-hero"
+      >Chơi Ngay</a>
 
     </div>
 
@@ -2936,29 +2991,46 @@ window.addEventListener("keydown", function(e){
   }
 });
 
-function syncNavButtonWidth(){
-  const d = document.querySelector('.btn-download-nav');
-  const p = document.querySelector('.btn-play-nav');
-  if(d && p){
-    const w = d.getBoundingClientRect().width;
-    if(w > 0){
-      p.style.width = w + 'px';
-      p.style.paddingLeft = '0';
-      p.style.paddingRight = '0';
-      p.style.textAlign = 'center';
+function syncHeroButtonWidth(){
+  const learnBtn = document.getElementById('btnLearnApp') || document.querySelector('.btn-learn-app') || document.querySelector('a[href="#about"].btn');
+  const d = document.querySelector('.btn-download-hero');
+  const p = document.querySelector('.btn-play-hero');
+  if(learnBtn && (d || p)){
+    if(window.innerWidth > 600){
+      if(d) d.style.width = 'auto';
+      if(p) p.style.width = 'auto';
+      const w = Math.round(learnBtn.getBoundingClientRect().width);
+      if(w > 0){
+        if(d){
+          d.style.width = w + 'px';
+          d.style.textAlign = 'center';
+        }
+        if(p){
+          p.style.width = w + 'px';
+          p.style.textAlign = 'center';
+        }
+      }
+    } else {
+      if(d) d.style.width = '';
+      if(p) p.style.width = '';
     }
   }
 }
+
+function syncNavButtonWidth(){
+  syncHeroButtonWidth();
+}
+
 window.addEventListener("DOMContentLoaded", function(){
-  syncNavButtonWidth();
+  syncHeroButtonWidth();
   if(window.location.hash === "#download"){
     showDownload();
   }
 });
-window.addEventListener("load", syncNavButtonWidth);
-window.addEventListener("resize", syncNavButtonWidth);
+window.addEventListener("load", syncHeroButtonWidth);
+window.addEventListener("resize", syncHeroButtonWidth);
 if(document.fonts){
-  document.fonts.ready.then(syncNavButtonWidth);
+  document.fonts.ready.then(syncHeroButtonWidth);
 }
 
 window.addEventListener("hashchange", function(){
